@@ -17,10 +17,8 @@ app.use(cors(corsOptions));
 
 const {
     PORT,
-    DB_AND_EMAIL_SERVICE_INTERFACE_PORT,
-    DB_AND_EMAIL_SERVICE_INTERFACE_HOST,
-    RAG_SERVICE_INTERFACE_PORT,
-    RAG_SERVICE_INTERFACE_HOST
+    DB_AND_EMAIL_SERVICE_INTERFACE,
+    RAG_SERVICE_INTERFACE
 } = process.env;
 
 const store = {};
@@ -35,7 +33,7 @@ app.post('/query', async (req, res) => {
             body: JSON.stringify({query: req.body.query.slice(0, 300)})
         };
 
-        const ragResponse = await fetch(`${RAG_SERVICE_INTERFACE_HOST}:${RAG_SERVICE_INTERFACE_PORT}/query`, postReqPayload);
+        const ragResponse = await fetch(`${RAG_SERVICE_INTERFACE}/query`, postReqPayload);
         const ragJson = await ragResponse.json();
         ragJson.response = ragJson.response.trim().slice(0, 5000);
         const hashKey = createHash('sha256').update(`${new Date()}${Math.random() * 1000}${ragJson.query}${ragJson.response}`).digest('hex');
@@ -70,7 +68,8 @@ app.post('/rating', async (req, res) => {
                 body: JSON.stringify({userMsg: userMsg, botMsg: botMsg, ratingValue: ratingValue})
             };
     
-            const dbResponse = await fetch(`${DB_AND_EMAIL_SERVICE_INTERFACE_HOST}:${DB_AND_EMAIL_SERVICE_INTERFACE_PORT}/rating`, postReqPayload);
+            // const dbResponse = await fetch(`${DB_AND_EMAIL_SERVICE_INTERFACE_HOST}:${DB_AND_EMAIL_SERVICE_INTERFACE_PORT}/rating`, postReqPayload);
+            const dbResponse = await fetch(`${DB_AND_EMAIL_SERVICE_INTERFACE}/rating`, postReqPayload);
             const dbJson = await dbResponse.json();
 
             delete store[hashKey];
