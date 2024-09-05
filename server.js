@@ -37,7 +37,7 @@ app.post('/query', async (req, res) => {
 
         const ragResponse = await fetch(`${RAG_SERVICE_INTERFACE_HOST}:${RAG_SERVICE_INTERFACE_PORT}/query`, postReqPayload);
         const ragJson = await ragResponse.json();
-        ragJson.response = ragJson.response.slice(0, 5000);
+        ragJson.response = ragJson.response.trim().slice(0, 5000);
         const hashKey = createHash('sha256').update(`${new Date()}${Math.random() * 1000}${ragJson.query}${ragJson.response}`).digest('hex');
         store[hashKey] = {userMsg: ragJson.query, botMsg: ragJson.response};
         res.send({hashKey: hashKey, botResponse: ragJson.response});
@@ -45,20 +45,20 @@ app.post('/query', async (req, res) => {
     } catch (error) {
         // To be implemented later
         console.log(error);
+        res.send(error);
     }
 });
 
 app.post('/rating', async (req, res) => {
     try {
 
-        const {hashKey, userMsg, botMsg, ratingValue} = req.body;
+        const {hashKey, userMsg, botMsg, ratingValue = null} = req.body;
 
-        if (!store.hasOwnProperty(hashKey)) {
-            // res.send({'msg': 'Incorrect hash sent with rating. Failed to send rating.'});
-            res.send({'msg': `${store.hasOwnProperty(hashKey)}`, "h": hashKey});
+        if (hashKey in store === false) {
+            res.send({'msg': 'Incorrect hash sent with rating. Failed to send rating.', 'hash': hashKey});
 
-        } else if (ratingValue !== 'correct' || ratingValue !== 'partial' || ratingValue !== 'incorrect') {
-            res.send({'msg': 'Invalid rating value sent. Failed to send rating.'});
+        } else if (!(ratingValue === 'correct' || ratingValue === 'partial' || ratingValue === 'incorrect')) {
+            res.send({'msg': 'Invalid rating value sent. Failed to send rating.', 'ratingValue': ratingValue});
 
         } else if (store[hashKey].userMsg === userMsg && store[hashKey].botMsg === botMsg) {
 
@@ -79,27 +79,20 @@ app.post('/rating', async (req, res) => {
             
 
         } else {
-            res.send({'msg': 'Either original user message or bot response was changed. Failed to send rating.'});
+            res.send({
+                'msg': 'Either original user message or bot response was changed. Failed to send rating.',
+                'userMsg': userMsg,
+                'botMsg': botMsg
+            });
         }
 
 
     } catch (error) {
         // To be implemented later
         console.log(error);
+        res.send(error);
     }
 });
-
-// app.post('/post', (req, res) => {
-//     const { userMsg, botMsg } = req.body;
-//     const hashKey = createHash('sha256').update(`${new Date()}${Math.random() * 100000}${userMsg}${botMsg}`).digest('hex');
-//     store[hashKey] = req.body;
-//     res.send({hashKey: hashKey, ...req.body});
-// });
-
-// app.get('/get', (req, res) => {
-//     const key = req.body.key;
-//     res.send(key in store ? {key: true} : {key: false});
-// });
 
 app.get('/getstore', (req, res) => {
     res.send({store: store});
