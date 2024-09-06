@@ -70,7 +70,7 @@ app.post('/rating', async (req, res) => {
                 body: JSON.stringify({userMsg: userMsg, botMsg: botMsg, ratingValue: ratingValue})
             };
     
-            const dbResponse = await fetch(`${DB_AND_EMAIL_SERVICE_INTERFACE_HOST}:${DB_AND_EMAIL_SERVICE_INTERFACE_PORT}/rating`, postReqPayload);
+            const dbResponse = await fetch(`http://${DB_AND_EMAIL_SERVICE_INTERFACE_HOST}:${DB_AND_EMAIL_SERVICE_INTERFACE_PORT}/rating`, postReqPayload);
             const dbJson = await dbResponse.json();
 
             delete store[hashKey];
