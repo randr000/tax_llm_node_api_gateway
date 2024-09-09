@@ -94,8 +94,8 @@ app.post('/rating', async (req, res) => {
     }
 });
 
-app.get('/getstore', (req, res) => {
-    res.send({store: store});
-});
+// app.get('/getstore', (req, res) => {
+//     res.send({store: store});
+// });
 
 app.listen(PORT);
