@@ -5,3 +5,4 @@ certs/
 sample.env
 .dockerignore
 Dockerfile
+README.md
