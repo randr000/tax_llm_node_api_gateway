@@ -23,6 +23,8 @@ const {
     RAG_SERVICE_INTERFACE_PORT
 } = process.env;
 
+// TO DO: Create a way to delete items when a user closes the webpage without rating the last response.
+// Perhaps Redis?
 const store = {};
 
 app.post('/query', async (req, res) => {
