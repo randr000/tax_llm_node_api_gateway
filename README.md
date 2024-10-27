@@ -60,7 +60,7 @@ Sample response object if invalid rating value was sent:
     "msg": "Invalid rating value sent. Failed to send rating.",
     "ratingValue": <"Invalid rating value string that was sent with request">
 }
-```.
+```
 Sample response object if the incorrect userMsg or botMsg was sent with the wrong hashKey:
 ```js
 {
