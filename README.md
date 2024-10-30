@@ -1,18 +1,16 @@
 # Tax RAG App - API Gateway
 
-[Front-End Site](https://taxragapp.vercel.app/)<br>
-[Front-End Site GitHub](https://github.com/randr000/tax_llm_next_app)
-
 ### This service routes requests to either the [Chat](https://github.com/randr000/tax_llm) service or [Database and Mailer](https://github.com/randr000/tax_llm_node_app) service
 
-Install project dependencies
+Install project dependencies:
 ```bash
 npm install
 ```
-Copy sample.env and insert environment variables
+Copy sample.env:
 ```bash
 cp sample.env .env
 ```
+Add environment variable values to .env file:
 ```
 PORT=<Port for server to listen on>
 DB_AND_EMAIL_SERVICE_INTERFACE_HOST=<localhost or docker service name>
@@ -21,11 +19,12 @@ RAG_SERVICE_INTERFACE_HOST=<localhost or docker service name>
 RAG_SERVICE_INTERFACE_PORT=<Port for Chat service>
 ```
 
-A post request made to the API path /query
+#### A post request made to the API path "/query"
 Sample request object:
 ```js
 {"query": "How many filing statuses are there?"}
 ```
+When a request is received, a hashkey string is created and the user's query and the bot's response are stored in a key-value database. This is used to later determine that a rating received belongs to the correct user query and bot response.<br><br>
 Sample response object:
 ```js
 {
@@ -34,7 +33,8 @@ Sample response object:
 }
 ```
 
-A post request made to the API path /rating
+
+#### A post request made to the API path "/rating"
 Sample request object:
 ```js
 {
@@ -50,7 +50,7 @@ Sample response object if request was successful:
     "msg": "Rating sent successfully."
 }
 ```
-Sample response object if hashKey was not in store:
+Sample response object if hashKey was not in key-value database:
 ```js
 {
     "msg": "Incorrect hash sent with rating. Failed to send rating.",
@@ -78,9 +78,13 @@ Sample response object if there were any other issues with request:
     "msg": "Failed to send rating successfully.",
 }
 ```
-To start the API gateway
+To start the API gateway:
 ```bash
 node server.js
 ```
 
 It is recommended to run this service within a Docker container. The Dockerfile located in the project's root directly can be used to create the image.
+
+## Front-End Links
+[Front-End Site Live](https://taxragapp.vercel.app/)<br>
+[Front-End Site README](https://github.com/randr000/tax_llm_next_app)
