@@ -1,6 +1,6 @@
 # Tax RAG App - API Gateway
 
-### This service routes requests to either the [Chat](https://github.com/randr000/tax_llm) service or [Database and Mailer](https://github.com/randr000/tax_llm_node_app) service
+### This service routes requests to either the [Chat](https://github.com/randr000/tax_llm) service or [Database and Mailer](https://github.com/randr000/tax_llm_node_app) service.
 
 Install project dependencies:
 ```bash
